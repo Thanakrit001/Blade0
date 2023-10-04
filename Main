@@ -1,0 +1,48 @@
+local LocalPlayer = game:GetService("Players").LocalPlayer
+game:GetService("Workspace").Balls.ChildAdded:Connect(function(child)
+    local trackTask = task.spawn(function()
+        local ball = child
+        while task.wait() do
+            if string.find(ball.BrickColor.Name:lower(), ("red") then
+                print("Found parry target")
+                while LocalPlayer:DistanceFromCharacter(ball.CFrame.Position)
+> getgenv().ScriptConfig.DistanceBeforeParry do
+                        task.wait()
+                end
+
+                print("Parrying...")
+
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                ReplicatedStorage.Remotes.ParryButtonPress:Fire()
+                print("Parry attempted")
+            end
+        end
+    end)
+    child.Destroying:Connect(function()
+        task.cancel(trackTask)
+    end)
+end)
+
+local win = SolarisLib:Window("SYNAPSE")
+local Main = win:Tab("Main")
+local Section1 = Main:Section("Main")
+local Section2 = Main:Section("Server")
+
+Section1:Toggle("Parry",true,function(vu)
+	if vu then
+		startAutoParry()
+	else
+		stopAutoParry()
+	end
+end)
+
+
+
+
+Section2:Button("Rejoin Server", function()
+	local ts = game:GetService("TeleportService") local p = game.Players.LocalPlayer ts:Teleport(game.PlaceId, p)
+end)
+
+
+
+return SolarisLib
